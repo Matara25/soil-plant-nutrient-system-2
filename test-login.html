@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        .test-form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-form">
+        <h2>Simple Login Test</h2>
+        <form id="testForm">
+            <input type="text" id="testUsername" placeholder="Username" autocomplete="username">
+            <input type="password" id="testPassword" placeholder="Password" autocomplete="current-password">
+            <button type="submit">Test Login</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Test login page loaded');
+            
+            const usernameInput = document.getElementById('testUsername');
+            const passwordInput = document.getElementById('testPassword');
+            const form = document.getElementById('testForm');
+            const result = document.getElementById('result');
+            
+            console.log('Inputs found:', !!usernameInput, !!passwordInput);
+            
+            // Test inputs
+            if (usernameInput) {
+                usernameInput.addEventListener('input', function(e) {
+                    console.log('Username typed:', e.target.value);
+                    result.textContent = 'Username: ' + e.target.value;
+                });
+                usernameInput.addEventListener('focus', function() {
+                    console.log('Username focused');
+                    usernameInput.style.borderColor = '#4CAF50';
+                });
+            }
+            
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function(e) {
+                    console.log('Password typed:', '***');
+                    result.textContent = 'Password: ***';
+                });
+                passwordInput.addEventListener('focus', function() {
+                    console.log('Password focused');
+                    passwordInput.style.borderColor = '#4CAF50';
+                });
+            }
+            
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Form submitted! Username: ' + usernameInput.value + ', Password: ' + passwordInput.value);
+                });
+            }
+            
+            // Auto-focus username
+            setTimeout(() => {
+                if (usernameInput) {
+                    usernameInput.focus();
+                    console.log('Username auto-focused');
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

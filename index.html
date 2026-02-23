@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil & Plant Nutrient System - Smart Agriculture Solutions</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-page active">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="login-logo">
+                        <i class="fas fa-seedling"></i>
+                        <span>SoilDoctor</span>
+                    </div>
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to access your agricultural dashboard</p>
+                </div>
+                
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="username" name="username" required placeholder="Enter your username">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" required placeholder="Enter your password">
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">
+                        <span class="btn-text">Sign In</span>
+                        <div class="btn-loader" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </button>
+                    
+                    <div id="loginError" class="error-message" style="display: none;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Invalid username or password</span>
+                    </div>
+                </form>
+                
+                <div class="login-footer">
+                    <p>Don't have an account? <a href="#" class="signup-link">Sign up</a></p>
+                    <div class="demo-credentials">
+                        <p><strong>Demo Credentials:</strong></p>
+                        <p>Username: <code>farmer</code> | Password: <code>soil123</code></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="login-background">
+                <div class="bg-pattern"></div>
+                <div class="floating-elements">
+                    <i class="fas fa-leaf float-1"></i>
+                    <i class="fas fa-seedling float-2"></i>
+                    <i class="fas fa-cloud float-3"></i>
+                    <i class="fas fa-sun float-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application (Hidden until login) -->
+    <div id="mainApp" class="main-app" style="display: none;">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <i class="fas fa-seedling"></i>
+                    <span>SoilDoctor</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link" data-section="home">Home</a></li>
+                    <li><a href="#farmers-dashboard" class="nav-link" data-section="farmers-dashboard">Farmers Dashboard</a></li>
+                    <li><a href="#sensor-dashboard" class="nav-link" data-section="sensor-dashboard">Sensor Dashboard</a></li>
+                    <li><a href="#recommendation-dashboard" class="nav-link" data-section="recommendation-dashboard">Recommendations</a></li>
+                    <li><a href="#about" class="nav-link" data-section="about">About</a></li>
+                    <li><a href="#technology" class="nav-link" data-section="technology">Technology</a></li>
+                    <li><a href="#solution" class="nav-link" data-section="solution">Solution</a></li>
+                    <li><a href="#achievements" class="nav-link" data-section="achievements">Achievements</a></li>
+                    <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
+                    <li class="nav-item-logout">
+                        <button id="logoutBtn" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero section-content active-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Transforming Agriculture with Intelligent Soil Management</h1>
+                <p class="hero-subtitle">Empowering smallholder farmers with AI-driven soil analysis and sustainable fertilizer recommendations</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary">Get Started</button>
+                    <button class="btn btn-secondary">Learn More</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-graphic">
+                    <i class="fas fa-leaf"></i>
+                    <i class="fas fa-microchip"></i>
+                    <i class="fas fa-database"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Farmers Dashboard Section -->
+    <section id="farmers-dashboard" class="dashboard-section section-content">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h1>Farmer Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                        <h3>John Farmer</h3>
+                        <p>Kisumu, Kenya</p>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="showAddFarmerModal()">
+                    <i class="fas fa-plus"></i> Add Farmer
+                </button>
+                <button class="btn btn-secondary" onclick="testModal()">
+                    <i class="fas fa-test"></i> Test Modal
+                </button>
+            </div>
+            
+            <div class="dashboard-grid">
+                <!-- Farmer Management -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Farmer Management</h3>
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="farmer-table-container">
+                            <table class="farmer-table" id="farmerTable">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-user"></i> Name</th>
+                                        <th><i class="fas fa-envelope"></i> Email</th>
+                                        <th><i class="fas fa-phone"></i> Phone</th>
+                                        <th><i class="fas fa-map-marker-alt"></i> Location</th>
+                                        <th><i class="fas fa-ruler-combined"></i> Farm Size</th>
+                                        <th><i class="fas fa-clock"></i> Experience</th>
+                                        <th><i class="fas fa-calendar"></i> Joined</th>
+                                        <th><i class="fas fa-cogs"></i> Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="farmerTableBody">
+                                    <!-- Farmers will be populated here -->
+                                </tbody>
+                            </table>
+                            <div class="no-farmers-message" id="noFarmersMessage" style="display: none;">
+                                <i class="fas fa-users-slash"></i>
+                                <h4>No Farmers Added Yet</h4>
+                                <p>Click "Add Farmer" to register your first farmer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Farm Overview -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Farm Overview</h3>
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="farm-stats">
+                            <div class="stat">
+                                <span class="stat-value">2.5 ha</span>
+                                <span class="stat-label">Total Area</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">3</span>
+                                <span class="stat-label">Active Crops</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">85%</span>
+                                <span class="stat-label">Soil Health</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Crops -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Current Crops</h3>
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="crop-list">
+                            <div class="crop-item">
+                                <div class="crop-icon">🌽</div>
+                                <div class="crop-info">
+                                    <h4>Maize</h4>
+                                    <p>Field A - 1.2 ha</p>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 65%"></div>
+                                    </div>
+                                    <span>Growth: 65%</span>
+                                </div>
+                            </div>
+                            <div class="crop-item">
+                                <div class="crop-icon">🌾</div>
+                                <div class="crop-info">
+                                    <h4>Beans</h4>
+                                    <p>Field B - 0.8 ha</p>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 40%"></div>
+                                    </div>
+                                    <span>Growth: 40%</span>
+                                </div>
+                            </div>
+                            <div class="crop-item">
+                                <div class="crop-icon">🥔</div>
+                                <div class="crop-info">
+                                    <h4>Potatoes</h4>
+                                    <p>Field C - 0.5 ha</p>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 80%"></div>
+                                    </div>
+                                    <span>Growth: 80%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Recent Activities</h3>
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-flask"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <h4>Soil Test Completed</h4>
+                                    <p>Field A - NPK levels analyzed</p>
+                                    <span class="activity-time">2 days ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-spray-can"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <h4>Fertilizer Applied</h4>
+                                    <p>Compost - 500kg to Field B</p>
+                                    <span class="activity-time">5 days ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-tint"></i>
+                                </div>
+                                <div class="activity-details">
+                                    <h4>Irrigation Completed</h4>
+                                    <p>All fields - 2 hours</p>
+                                    <span class="activity-time">1 week ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Quick Actions</h3>
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="action-buttons">
+                            <button class="action-btn">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Add Crop</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-vial"></i>
+                                <span>Request Soil Test</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>View Reports</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Sensor Dashboard Section -->
+    <section id="sensor-dashboard" class="dashboard-section section-content">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h1>System Sensor Dashboard</h1>
+                <div class="sensor-status">
+                    <div class="status-indicator online"></div>
+                    <span>All Systems Online</span>
+                </div>
+            </div>
+            
+            <div class="dashboard-grid">
+                <!-- Real-time Sensor Data -->
+                <div class="dashboard-card full-width">
+                    <div class="card-header">
+                        <h3>Real-time Sensor Data</h3>
+                        <div class="refresh-btn">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="sensor-grid">
+                            <div class="sensor-card">
+                                <div class="sensor-header">
+                                    <h4>pH Level</h4>
+                                    <div class="sensor-icon">
+                                        <i class="fas fa-flask"></i>
+                                    </div>
+                                </div>
+                                <div class="sensor-value">
+                                    <span class="value">6.8</span>
+                                    <span class="unit">pH</span>
+                                </div>
+                                <div class="sensor-status good">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Optimal</span>
+                                </div>
+                                <div class="sensor-chart">
+                                    <canvas id="phChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="sensor-card">
+                                <div class="sensor-header">
+                                    <h4>Nitrogen (N)</h4>
+                                    <div class="sensor-icon">
+                                        <i class="fas fa-atom"></i>
+                                    </div>
+                                </div>
+                                <div class="sensor-value">
+                                    <span class="value">45</span>
+                                    <span class="unit">mg/kg</span>
+                                </div>
+                                <div class="sensor-status warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span>Low</span>
+                                </div>
+                                <div class="sensor-chart">
+                                    <canvas id="nitrogenChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="sensor-card">
+                                <div class="sensor-header">
+                                    <h4>Phosphorus (P)</h4>
+                                    <div class="sensor-icon">
+                                        <i class="fas fa-atom"></i>
+                                    </div>
+                                </div>
+                                <div class="sensor-value">
+                                    <span class="value">28</span>
+                                    <span class="unit">mg/kg</span>
+                                </div>
+                                <div class="sensor-status good">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Good</span>
+                                </div>
+                                <div class="sensor-chart">
+                                    <canvas id="phosphorusChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="sensor-card">
+                                <div class="sensor-header">
+                                    <h4>Potassium (K)</h4>
+                                    <div class="sensor-icon">
+                                        <i class="fas fa-atom"></i>
+                                    </div>
+                                </div>
+                                <div class="sensor-value">
+                                    <span class="value">120</span>
+                                    <span class="unit">mg/kg</span>
+                                </div>
+                                <div class="sensor-status good">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Optimal</span>
+                                </div>
+                                <div class="sensor-chart">
+                                    <canvas id="potassiumChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="sensor-card">
+                                <div class="sensor-header">
+                                    <h4>Soil Moisture</h4>
+                                    <div class="sensor-icon">
+                                        <i class="fas fa-tint"></i>
+                                    </div>
+                                </div>
+                                <div class="sensor-value">
+                                    <span class="value">65</span>
+                                    <span class="unit">%</span>
+                                </div>
+                                <div class="sensor-status good">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Adequate</span>
+                                </div>
+                                <div class="sensor-chart">
+                                    <canvas id="moistureChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="sensor-card">
+                                <div class="sensor-header">
+                                    <h4>Temperature</h4>
+                                    <div class="sensor-icon">
+                                        <i class="fas fa-thermometer-half"></i>
+                                    </div>
+                                </div>
+                                <div class="sensor-value">
+                                    <span class="value">24</span>
+                                    <span class="unit">°C</span>
+                                </div>
+                                <div class="sensor-status good">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Normal</span>
+                                </div>
+                                <div class="sensor-chart">
+                                    <canvas id="temperatureChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sensor Network Status -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Sensor Network</h3>
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="network-stats">
+                            <div class="network-item">
+                                <div class="network-label">Active Sensors</div>
+                                <div class="network-value">12/12</div>
+                            </div>
+                            <div class="network-item">
+                                <div class="network-label">Signal Strength</div>
+                                <div class="network-value">Excellent</div>
+                            </div>
+                            <div class="network-item">
+                                <div class="network-label">Last Update</div>
+                                <div class="network-value">2 min ago</div>
+                            </div>
+                            <div class="network-item">
+                                <div class="network-label">Battery Status</div>
+                                <div class="network-value">Good</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alerts -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>System Alerts</h3>
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="alert-list">
+                            <div class="alert-item warning">
+                                <div class="alert-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <h4>Low Nitrogen Detected</h4>
+                                    <p>Field A - N levels below optimal range</p>
+                                    <span>10 minutes ago</span>
+                                </div>
+                            </div>
+                            <div class="alert-item info">
+                                <div class="alert-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <h4>Sensor Calibration Due</h4>
+                                    <p>pH sensor #3 requires calibration</p>
+                                    <span>1 hour ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommendation Dashboard Section -->
+    <section id="recommendation-dashboard" class="dashboard-section section-content">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h1>Recommendation Dashboard</h1>
+                <div class="recommendation-date">
+                    <span>Generated: Today, 2:30 PM</span>
+                </div>
+            </div>
+            
+            <div class="dashboard-grid">
+                <!-- Soil Analysis Summary -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Soil Analysis Summary</h3>
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="soil-summary">
+                            <div class="soil-item">
+                                <div class="soil-label">Overall Health</div>
+                                <div class="soil-score">
+                                    <span class="score">85/100</span>
+                                    <div class="score-bar">
+                                        <div class="score-progress" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nutrient-status">
+                                <div class="nutrient-item good">
+                                    <span>pH Level</span>
+                                    <span>6.8 - Optimal</span>
+                                </div>
+                                <div class="nutrient-item warning">
+                                    <span>Nitrogen</span>
+                                    <span>45 mg/kg - Low</span>
+                                </div>
+                                <div class="nutrient-item good">
+                                    <span>Phosphorus</span>
+                                    <span>28 mg/kg - Good</span>
+                                </div>
+                                <div class="nutrient-item good">
+                                    <span>Potassium</span>
+                                    <span>120 mg/kg - Optimal</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fertilizer Recommendations -->
+                <div class="dashboard-card full-width">
+                    <div class="card-header">
+                        <h3>Recommended Fertilizers</h3>
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="fertilizer-recommendations">
+                            <div class="fertilizer-card">
+                                <div class="fertilizer-header">
+                                    <div class="fertilizer-type organic">Organic</div>
+                                    <h4>Compost</h4>
+                                </div>
+                                <div class="fertilizer-details">
+                                    <div class="application-rate">
+                                        <span class="rate-label">Application Rate:</span>
+                                        <span class="rate-value">5 tons/ha</span>
+                                    </div>
+                                    <div class="timing">
+                                        <span class="timing-label">Best Time:</span>
+                                        <span class="timing-value">Before planting</span>
+                                    </div>
+                                    <div class="benefits">
+                                        <h5>Benefits:</h5>
+                                        <ul>
+                                            <li>Improves soil structure</li>
+                                            <li>Increases organic matter</li>
+                                            <li>Enhances water retention</li>
+                                            <li>Provides slow-release nutrients</li>
+                                        </ul>
+                                    </div>
+                                    <div class="cost-estimate">
+                                        <span class="cost-label">Estimated Cost:</span>
+                                        <span class="cost-value">$50/ton</span>
+                                    </div>
+                                </div>
+                                <div class="fertilizer-action">
+                                    <button class="btn btn-primary">Apply Recommendation</button>
+                                </div>
+                            </div>
+
+                            <div class="fertilizer-card">
+                                <div class="fertilizer-header">
+                                    <div class="fertilizer-type organic">Green Manure</div>
+                                    <h4>Clover Cover Crop</h4>
+                                </div>
+                                <div class="fertilizer-details">
+                                    <div class="application-rate">
+                                        <span class="rate-label">Application Rate:</span>
+                                        <span class="rate-value">2 kg/ha seeds</span>
+                                    </div>
+                                    <div class="timing">
+                                        <span class="timing-label">Best Time:</span>
+                                        <span class="timing-value">Between seasons</span>
+                                    </div>
+                                    <div class="benefits">
+                                        <h5>Benefits:</h5>
+                                        <ul>
+                                            <li>Fixes atmospheric nitrogen</li>
+                                            <li>Prevents soil erosion</li>
+                                            <li>Suppresses weeds</li>
+                                            <li>Improves soil fertility</li>
+                                        </ul>
+                                    </div>
+                                    <div class="cost-estimate">
+                                        <span class="cost-label">Estimated Cost:</span>
+                                        <span class="cost-value">$8/kg seeds</span>
+                                    </div>
+                                </div>
+                                <div class="fertilizer-action">
+                                    <button class="btn btn-primary">Apply Recommendation</button>
+                                </div>
+                            </div>
+
+                            <div class="fertilizer-card">
+                                <div class="fertilizer-header">
+                                    <div class="fertilizer-type inorganic">Supplemental</div>
+                                    <h4>Nitrogen Supplement</h4>
+                                </div>
+                                <div class="fertilizer-details">
+                                    <div class="application-rate">
+                                        <span class="rate-label">Application Rate:</span>
+                                        <span class="rate-value">50 kg/ha</span>
+                                    </div>
+                                    <div class="timing">
+                                        <span class="timing-label">Best Time:</span>
+                                        <span class="timing-value">During active growth</span>
+                                    </div>
+                                    <div class="benefits">
+                                        <h5>Benefits:</h5>
+                                        <ul>
+                                            <li>Quick nitrogen availability</li>
+                                            <li>Boosts crop growth</li>
+                                            <li>Increases yield potential</li>
+                                            <li>Corrects deficiency quickly</li>
+                                        </ul>
+                                    </div>
+                                    <div class="cost-estimate">
+                                        <span class="cost-label">Estimated Cost:</span>
+                                        <span class="cost-value">$1.2/kg</span>
+                                    </div>
+                                </div>
+                                <div class="fertilizer-action">
+                                    <button class="btn btn-secondary">Apply as Needed</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Application Schedule -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Application Schedule</h3>
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="schedule-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-date">Today</div>
+                                <div class="timeline-action">
+                                    <h4>Apply Compost</h4>
+                                    <p>Field A - 2.5 tons</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">Next Week</div>
+                                <div class="timeline-action">
+                                    <h4>Plant Clover Cover</h4>
+                                    <p>Field B - Between rows</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2 Weeks</div>
+                                <div class="timeline-action">
+                                    <h4>Soil Test Follow-up</h4>
+                                    <p>All fields - Check N levels</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cost-Benefit Analysis -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Cost-Benefit Analysis</h3>
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="cost-benefit">
+                            <div class="benefit-item">
+                                <div class="benefit-label">Expected Yield Increase</div>
+                                <div class="benefit-value positive">+18%</div>
+                            </div>
+                            <div class="benefit-item">
+                                <div class="benefit-label">Total Investment</div>
+                                <div class="benefit-value negative">$175</div>
+                            </div>
+                            <div class="benefit-item">
+                                <div class="benefit-label">Expected Return</div>
+                                <div class="benefit-value positive">$450</div>
+                            </div>
+                            <div class="benefit-item">
+                                <div class="benefit-label">ROI</div>
+                                <div class="benefit-value positive">157%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about section-content">
+        <div class="container">
+            <div class="section-header">
+                <h2>Revolutionizing Sustainable Agriculture</h2>
+                <p>Addressing soil fertility decline through innovative technology</p>
+            </div>
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="card-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>The Challenge</h3>
+                    <p>Declining soil fertility affects 70% of smallholder farmers who produce the majority of food supply in developing regions. Uninformed fertilizer use leads to nutrient imbalances, soil degradation, and reduced yields.</p>
+                </div>
+                <div class="about-card">
+                    <div class="card-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Our Solution</h3>
+                    <p>Intelligent platform combining AI, IoT, Big Data, and Cloud Computing to provide data-driven soil analysis and personalized fertilizer recommendations for sustainable farming.</p>
+                </div>
+                <div class="about-card">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>The Impact</h3>
+                    <p>Reducing chemical fertilizer costs by 30-40%, increasing yields by 15-20%, and cutting environmental damage while empowering farmers with knowledge for long-term soil health.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="technology" class="technology section-content">
+        <div class="container">
+            <div class="section-header">
+                <h2>Cutting-Edge Technologies</h2>
+                <p>Integrating AI, IoT, Big Data, and Cloud Computing</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Artificial Intelligence</h3>
+                    <p>Machine learning models analyze soil data with 92% accuracy to detect nutrient deficiencies and generate personalized recommendations</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>Internet of Things</h3>
+                    <p>Real-time soil monitoring through field-deployed sensors for continuous data collection and early nutrient imbalance alerts</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Big Data</h3>
+                    <p>Processing large-scale geospatial soil datasets with farmer-generated data for accurate, location-specific soil insights</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3>Cloud Computing</h3>
+                    <p>Scalable infrastructure hosting AI models, data storage, and analytics ensuring secure access from any location</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section id="solution" class="solution section-content">
+        <div class="container">
+            <div class="section-header">
+                <h2>Technical Solution</h2>
+                <p>End-to-end intelligent agriculture platform</p>
+            </div>
+            <div class="pipeline">
+                <h3>Data Processing Pipeline</h3>
+                <div class="pipeline-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Data Ingestion</h4>
+                            <p>IoT sensors, farmer inputs, and geospatial soil APIs</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Validation & Cleaning</h4>
+                            <p>Accuracy checks, error removal, and data normalization</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Feature Engineering</h4>
+                            <p>Data integration and meaningful feature creation</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Cloud Storage</h4>
+                            <p>Secure storage and scalable data management</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="architecture">
+                <h3>System Architecture</h3>
+                <div class="arch-layers">
+                    <div class="layer">
+                        <h4>Input Layer</h4>
+                        <p>Farmer Dashboard & IoT Sensors</p>
+                    </div>
+                    <div class="layer">
+                        <h4>Backend & Intelligence</h4>
+                        <p>Data Processing & AI Models</p>
+                    </div>
+                    <div class="layer">
+                        <h4>Cloud & External Services</h4>
+                        <p>Storage & Soil Grid APIs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements" class="achievements section-content">
+        <div class="container">
+            <div class="section-header">
+                <h2>Proven Impact & Achievements</h2>
+                <p>Measurable results transforming agriculture</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">92%</div>
+                    <div class="stat-label">Accuracy in Nutrient Detection</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">30-40%</div>
+                    <div class="stat-label">Reduction in Fertilizer Costs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15-20%</div>
+                    <div class="stat-label">Increase in Crop Yields</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">50%</div>
+                    <div class="stat-label">Reduction in Chemical Runoff</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">90%</div>
+                    <div class="stat-label">Farmer Confidence Increase</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1M+</div>
+                    <div class="stat-label">Farmers to Empower in 5 Years</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section-content">
+        <div class="container">
+            <div class="section-header">
+                <h2>Join the Agricultural Revolution</h2>
+                <p>Transform your farming practices with intelligent soil management</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Get Started Today</h3>
+                    <p>Empower your farm with data-driven insights and sustainable practices.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@soildoctor.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+254 123 456 789</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Nairobi, Kenya</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form>
+                        <input type="text" placeholder="Your Name" required>
+                        <input type="email" placeholder="Your Email" required>
+                        <input type="text" placeholder="Farm Location" required>
+                        <textarea placeholder="Tell us about your farm..." rows="4" required></textarea>
+                        <button type="submit" class="btn btn-primary">Get Started</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-seedling"></i>
+                    <span>SoilDoctor</span>
+                </div>
+                <p>&copy; 2024 Soil & Plant Nutrient System. Transforming agriculture through technology.</p>
+            </div>
+        </div>
+    </footer>
+    </div>
+
+    <!-- Add Farmer Modal -->
+    <div id="addFarmerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> Add New Farmer</h3>
+                <span class="close" onclick="closeAddFarmerModal()">&times;</span>
+            </div>
+            <form id="addFarmerForm" class="farmer-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="farmerName">
+                            <i class="fas fa-user"></i> Full Name
+                        </label>
+                        <input type="text" id="farmerName" placeholder="Enter farmer's full name" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="farmerEmail">
+                            <i class="fas fa-envelope"></i> Email Address
+                        </label>
+                        <input type="email" id="farmerEmail" placeholder="farmer@email.com" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="farmerPhone">
+                            <i class="fas fa-phone"></i> Phone Number
+                        </label>
+                        <input type="tel" id="farmerPhone" placeholder="+254 XXX XXX XXX" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="farmerLocation">
+                            <i class="fas fa-map-marker-alt"></i> Farm Location
+                        </label>
+                        <input type="text" id="farmerLocation" placeholder="Enter farm location/village" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="farmSize">
+                            <i class="fas fa-ruler-combined"></i> Farm Size (hectares)
+                        </label>
+                        <input type="number" id="farmSize" placeholder="2.5" step="0.1" min="0.1">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="experience">
+                            <i class="fas fa-clock"></i> Farming Experience (years)
+                        </label>
+                        <select id="experience">
+                            <option value="">Select experience</option>
+                            <option value="0-2">Beginner (0-2 years)</option>
+                            <option value="3-5">Intermediate (3-5 years)</option>
+                            <option value="6-10">Experienced (6-10 years)</option>
+                            <option value="10+">Expert (10+ years)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-user-plus"></i> Add Farmer
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeAddFarmerModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Crop Assignment Modal -->
+    <div id="cropAssignmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Assign Crops to Farmer</h3>
+                <span class="close" onclick="closeCropAssignmentModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="farmer-info" id="selectedFarmerInfo">
+                    <!-- Selected farmer info will be shown here -->
+                </div>
+                <form id="cropAssignmentForm">
+                    <div class="form-group">
+                        <label>Select Crops</label>
+                        <div class="crop-checkboxes" id="cropCheckboxes">
+                            <!-- Crop checkboxes will be populated here -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="plantingDate">Planting Date</label>
+                        <input type="date" id="plantingDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expectedHarvest">Expected Harvest Date</label>
+                        <input type="date" id="expectedHarvest" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Assign Crops</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeCropAssignmentModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="database.js"></script>
+    <script src="farmer-management-clean.js"></script>
+    <script src="clean-login.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
