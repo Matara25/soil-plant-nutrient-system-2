@@ -8,33 +8,38 @@ app = Flask(__name__)
 CORS(app)
 
 # Single shared in-memory connection
-conn = sqlite3.connect(':memory:', check_same_thread=False)
-conn.row_factory = sqlite3.Row
+db_connection = None
 
-def init_db():
-    print("Creating database tables...")
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            full_name TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS farms (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER,
-            farm_name TEXT NOT NULL,
-            latitude REAL,
-            longitude REAL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES users (id)
-        )
-    ''')
-    conn.commit()
-    print("Database tables created successfully!")
+def get_db():
+    global db_connection
+    if db_connection is None:
+        db_connection = sqlite3.connect(':memory:', check_same_thread=False)
+        db_connection.row_factory = sqlite3.Row
+        # Create tables immediately
+        cursor = db_connection.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                full_name TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS farms (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                farm_name TEXT NOT NULL,
+                latitude REAL,
+                longitude REAL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users (id)
+            )
+        ''')
+        db_connection.commit()
+        print("Database tables created successfully!")
+    return db_connection
 
 @app.route('/')
 def home():
@@ -52,6 +57,7 @@ def home():
 @app.route('/api/users', methods=['POST'])
 def create_user():
     data = request.get_json()
+    conn = get_db()
     cursor = conn.execute(
         'INSERT INTO users (username, email, full_name) VALUES (?, ?, ?)',
         (data['username'], data['email'], data['full_name'])
@@ -62,11 +68,13 @@ def create_user():
 
 @app.route('/api/users', methods=['GET'])
 def get_all_users():
+    conn = get_db()
     users = conn.execute('SELECT * FROM users').fetchall()
     return jsonify([dict(user) for user in users])
 
 @app.route('/api/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
+    conn = get_db()
     user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
     if user is None:
         return jsonify({'error': 'User not found'}), 404
@@ -75,6 +83,8 @@ def get_user(user_id):
 @app.route('/api/farms', methods=['POST', 'PUT'])
 def create_farm():
     data = request.get_json()
+    conn = get_db()
+    
     if request.method == 'POST':
         cursor = conn.execute(
             'INSERT INTO farms (user_id, farm_name, latitude, longitude) VALUES (?, ?, ?, ?)',
@@ -83,22 +93,25 @@ def create_farm():
         message = 'Farm created'
         farm_id = cursor.lastrowid
     elif request.method == 'PUT':
-        conn.execute(
+        cursor = conn.execute(
             'UPDATE farms SET farm_name = ?, latitude = ?, longitude = ? WHERE id = ?',
             (data['farm_name'], data.get('latitude'), data.get('longitude'), data['id'])
         )
         message = 'Farm updated'
         farm_id = data['id']
+    else:
+        return jsonify({'error': 'Method not allowed'}), 405
+    
     conn.commit()
     return jsonify({'id': farm_id, 'message': message}), 201
 
 @app.route('/api/users/<int:user_id>/farms', methods=['GET'])
 def get_user_farms(user_id):
+    conn = get_db()
     farms = conn.execute(
         'SELECT * FROM farms WHERE user_id = ?', (user_id,)
     ).fetchall()
     return jsonify([dict(farm) for farm in farms])
 
 if __name__ == '__main__':
-    init_db()
     app.run(debug=True, port=5000)
