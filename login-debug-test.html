@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 500px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .form-group { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: #007bff; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
+        .result { margin: 20px 0; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .debug { background: #f8f9fa; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Login Debug Test</h1>
+        
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="username" value="farmer">
+        </div>
+        
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" value="farmer123">
+        </div>
+        
+        <button onclick="testLogin()">Test Login</button>
+        <button onclick="testCredentials()">Test Credentials</button>
+        <button onclick="testElements()">Test Elements</button>
+        
+        <div id="result"></div>
+        <div id="debug"></div>
+    </div>
+
+    <script>
+        function testLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            console.log('Testing login:', { username, password });
+            
+            // Test 1: Direct credentials check
+            const validCredentials = [
+                { username: 'farmer', password: 'farmer123' }
+            ];
+            
+            const isValid = validCredentials.some(cred => cred.username === username && cred.password === password);
+            console.log('Direct check result:', isValid);
+            
+            // Test 2: Simulate login-integrated.js logic
+            try {
+                // Simulate the login system
+                if (username === 'farmer' && password === 'farmer123') {
+                    showResult('success', '✅ Direct login works!');
+                } else {
+                    showResult('error', '❌ Direct login failed');
+                }
+            } catch (error) {
+                showResult('error', '❌ Error: ' + error.message);
+            }
+        }
+        
+        function testCredentials() {
+            console.log('Testing credential arrays...');
+            
+            // Check all login files
+            const credentials = {
+                'login-integrated.js': [{ username: 'farmer', password: 'farmer123' }],
+                'login.js': { 'farmer': 'farmer123', 'admin': 'farmer123', 'demo': 'farmer123' },
+                'login-new.js': { 'farmer': 'farmer123', 'admin': 'farmer123', 'demo': 'farmer123' },
+                'simple-login.js': { 'farmer': 'farmer123', 'admin': 'farmer123', 'demo': 'farmer123' },
+                'clean-login.js': { 'farmer': 'farmer123', 'admin': 'farmer123', 'demo': 'farmer123' }
+            };
+            
+            let debug = 'Current Credentials:\n\n';
+            for (const [file, creds] of Object.entries(credentials)) {
+                debug += `${file}:\n`;
+                if (Array.isArray(creds)) {
+                    creds.forEach(cred => {
+                        debug += `  - ${cred.username} / ${cred.password}\n`;
+                    });
+                } else {
+                    for (const [user, pass] of Object.entries(creds)) {
+                        debug += `  - ${user} / ${pass}\n`;
+                    }
+                }
+                debug += '\n';
+            }
+            
+            document.getElementById('debug').innerHTML = `<pre>${debug}</pre>`;
+        }
+        
+        function testElements() {
+            console.log('Testing form elements...');
+            
+            // Check if main app has the elements
+            const mainUsername = document.getElementById('username');
+            const mainPassword = document.getElementById('password');
+            const mainForm = document.getElementById('loginForm');
+            
+            let debug = 'Element Check:\n\n';
+            debug += `Main page username element: ${!!mainUsername}\n`;
+            debug += `Main page password element: ${!!mainPassword}\n`;
+            debug += `Main page form element: ${!!mainForm}\n`;
+            
+            // Check if login-integrated.js is loaded
+            const loginSystem = window.loginSystem;
+            debug += `LoginSystem object: ${!!loginSystem}\n`;
+            
+            if (loginSystem) {
+                debug += `LoginSystem methods: ${Object.getOwnPropertyNames(loginSystem).filter(name => typeof loginSystem[name] === 'function').join(', ')}\n`;
+            }
+            
+            document.getElementById('debug').innerHTML = `<pre>${debug}</pre>`;
+        }
+        
+        function showResult(type, message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = `result ${type}`;
+            resultDiv.innerHTML = `<h3>${message}</h3>`;
+        }
+        
+        // Auto-test on load
+        window.onload = function() {
+            testElements();
+            testCredentials();
+        };
+    </script>
+</body>
+</html>

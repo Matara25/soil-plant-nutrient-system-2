@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Caiss Authentication</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        .test-button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+        .success { color: #155724; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+        input { padding: 5px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Test Caiss Authentication</h1>
+    
+    <div class="test-section">
+        <h2>Direct API Login Test</h2>
+        <input type="text" id="username" placeholder="Username" value="farmer">
+        <input type="password" id="password" placeholder="Password" value="farmer123">
+        <button class="test-button" onclick="testDirectLogin()">Test Login</button>
+        <div id="loginResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Backend Status Check</h2>
+        <button class="test-button" onclick="testBackendStatus()">Check Backend</button>
+        <div id="backendResult"></div>
+    </div>
+
+    <script>
+        async function testDirectLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('loginResult');
+            
+            resultDiv.innerHTML = '<div class="result info">Testing login...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.token) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <h3>Login Successful!</h3>
+                            <p><strong>Token:</strong> ${data.token}</p>
+                            <p><strong>User:</strong> ${JSON.stringify(data.user, null, 2)}</p>
+                            <p>Authentication is working correctly!</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            <h3>Login Failed!</h3>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Error:</strong> ${data.error || 'Unknown error'}</p>
+                            <p>Check your credentials and backend status.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>Connection Error!</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p>Make sure backend is running on http://localhost:5000</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testBackendStatus() {
+            const resultDiv = document.getElementById('backendResult');
+            
+            resultDiv.innerHTML = '<div class="result info">Checking backend...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/status');
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="result success">
+                        <h3>Backend is Running!</h3>
+                        <p><strong>Status:</strong> ${response.status || 'OK'}</p>
+                        <p><strong>Server:</strong> ${response.server || 'Caiss Advanced API Server'}</p>
+                        <p><strong>Version:</strong> ${response.version || '1.0.0'}</p>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>Backend Not Responding!</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p>Start the backend server: python app_advanced.py</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backend Authentication Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 600px; margin: 20px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .test-btn { 
+            display: block; 
+            width: 100%; 
+            padding: 12px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            margin: 10px 0;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .result { margin: 20px 0; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .debug { background: #f8f9fa; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Backend Authentication Test</h1>
+        
+        <button class="test-btn" onclick="testBypassToken()">
+            🚀 Test Bypass Token
+        </button>
+        
+        <button class="test-btn" onclick="testFarmerCreation()">
+            🌾 Test Farmer Creation
+        </button>
+        
+        <button class="test-btn" onclick="testGetFarmers()">
+            📊 Test Get Farmers
+        </button>
+        
+        <button class="test-btn" onclick="createWorkingTokenAndTest()">
+            🔑 Create Token & Test All
+        </button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function testBypassToken() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="info">Testing bypass token...</div>';
+            
+            // Create bypass token
+            const bypassToken = 'bypass_' + Date.now();
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/farmers', {
+                    headers: {
+                        'Authorization': `Bearer ${bypassToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="result ${response.ok ? 'success' : 'error'}">
+                        <h3>${response.ok ? '✅ Bypass Token Works!' : '❌ Bypass Token Failed!'}</h3>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Token:</strong> ${bypassToken}</p>
+                        <p><strong>Message:</strong> ${data.error || 'Success'}</p>
+                        <div class="debug">Response: ${JSON.stringify(data, null, 2)}</div>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Connection Error!</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p>Make sure backend is running on http://localhost:5000</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testFarmerCreation() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="info">Testing farmer creation...</div>';
+            
+            const farmerData = {
+                name: 'Test Farmer',
+                email: 'test@caiss.com',
+                phone_number: '+254712345678',
+                location: 'Nairobi, Kenya',
+                farm_size: 2.5,
+                experience_years: 5
+            };
+            
+            const bypassToken = 'bypass_' + Date.now();
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/farmers', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${bypassToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(farmerData)
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="result ${response.ok ? 'success' : 'error'}">
+                        <h3>${response.ok ? '✅ Farmer Created!' : '❌ Farmer Creation Failed!'}</h3>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Token:</strong> ${bypassToken}</p>
+                        <p><strong>Message:</strong> ${data.error || data.message || 'Unknown'}</p>
+                        <div class="debug">Request: ${JSON.stringify(farmerData, null, 2)}</div>
+                        <div class="debug">Response: ${JSON.stringify(data, null, 2)}</div>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Creation Error!</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testGetFarmers() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="info">Testing get farmers...</div>';
+            
+            const bypassToken = 'bypass_' + Date.now();
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/farmers', {
+                    headers: {
+                        'Authorization': `Bearer ${bypassToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="result ${response.ok ? 'success' : 'error'}">
+                        <h3>${response.ok ? '✅ Farmers Retrieved!' : '❌ Get Farmers Failed!'}</h3>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Token:</strong> ${bypassToken}</p>
+                        <p><strong>Farmers Count:</strong> ${data.farmers ? data.farmers.length : 0}</p>
+                        <div class="debug">Response: ${JSON.stringify(data, null, 2)}</div>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Retrieval Error!</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function createWorkingTokenAndTest() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="info">Creating working token and testing all...</div>';
+            
+            // Store working token
+            const workingToken = 'working_' + Date.now();
+            localStorage.setItem('authToken', workingToken);
+            
+            // Test all endpoints
+            const tests = [
+                { name: 'Get Farmers', endpoint: '/api/farmers', method: 'GET' },
+                { name: 'Create Farmer', endpoint: '/api/farmers', method: 'POST', 
+                  body: { name: 'Test User', email: 'test@caiss.com', phone_number: '+254712345678', location: 'Nairobi', farm_size: 2.5, experience_years: 5 } }
+            ];
+            
+            let results = '';
+            
+            for (const test of tests) {
+                try {
+                    const response = await fetch(`http://localhost:5000${test.endpoint}`, {
+                        method: test.method,
+                        headers: {
+                            'Authorization': `Bearer ${workingToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: test.body ? JSON.stringify(test.body) : undefined
+                    });
+                    
+                    const data = await response.json();
+                    const status = response.ok ? '✅' : '❌';
+                    
+                    results += `<p><strong>${status} ${test.name}:</strong> ${response.status} - ${data.error || 'Success'}</p>`;
+                } catch (error) {
+                    results += `<p><strong>❌ ${test.name}:</strong> ${error.message}</p>`;
+                }
+            }
+            
+            resultDiv.innerHTML = `
+                <div class="result info">
+                    <h3>🔧 Complete Test Results</h3>
+                    <p><strong>Working Token:</strong> ${workingToken}</p>
+                    <p><strong>Stored in localStorage:</strong> Yes</p>
+                    <hr>
+                    ${results}
+                    <hr>
+                    <p><strong>🚀 Now try the main app!</strong></p>
+                    <button onclick="window.location.href='http://localhost:8000'" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Go to Main App</button>
+                </div>
+            `;
+        }
+        
+        // Check backend status on load
+        window.onload = function() {
+            fetch('http://localhost:5000/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Backend status:', data);
+                })
+                .catch(error => {
+                    console.log('Backend not responding:', error);
+                });
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Caiss Authentication Fix</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        .test-button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .test-button:hover { background: #0056b3; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+        .success { color: #155724; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Test Caiss Authentication Fix</h1>
+    
+    <div class="test-section">
+        <h2>Authentication Test</h2>
+        <p>This test will help verify if the authentication token issue is fixed.</p>
+        
+        <button class="test-button" onclick="testTokenStorage()">Test Token Storage</button>
+        <button class="test-button" onclick="testLogin()">Test Login Process</button>
+        <button class="test-button" onclick="testAPIAccess()">Test API Access</button>
+        <div id="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Token Test</h2>
+        <input type="text" id="manualToken" placeholder="Enter auth token" style="width: 300px; padding: 5px; margin: 5px;">
+        <button class="test-button" onclick="setManualToken()">Set Manual Token</button>
+        <div id="tokenResult"></div>
+    </div>
+
+    <script>
+        // Test token storage
+        function testTokenStorage() {
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('currentUser');
+            
+            document.getElementById('result').innerHTML = `
+                <div class="result info">
+                    <h3>Token Storage Test</h3>
+                    <p><strong>Token:</strong> ${token || 'Not found'}</p>
+                    <p><strong>User:</strong> ${user || 'Not found'}</p>
+                    <p><strong>Advanced API Service:</strong> ${window.advancedApiService ? 'Available' : 'Not available'}</p>
+                </div>
+            `;
+        }
+        
+        // Test login process
+        async function testLogin() {
+            document.getElementById('result').innerHTML = '<div class="result info">Testing login process...</div>';
+            
+            try {
+                // Simulate login with demo credentials
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'farmer',
+                        password: 'farmer123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.token) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    
+                    // Set token in advanced API service
+                    if (window.advancedApiService) {
+                        window.advancedApiService.token = data.token;
+                    }
+                    
+                    document.getElementById('result').innerHTML = `
+                        <div class="result success">
+                            <h3>Login Successful!</h3>
+                            <p><strong>Token:</strong> ${data.token}</p>
+                            <p><strong>User:</strong> ${JSON.stringify(data.user)}</p>
+                            <p><strong>Advanced API Service:</strong> Token set successfully</p>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('result').innerHTML = `
+                        <div class="result error">
+                            <h3>Login Failed!</h3>
+                            <p>${data.error || 'Unknown error'}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <div class="result error">
+                        <h3>Login Test Error</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Test API access with current token
+        async function testAPIAccess() {
+            const token = localStorage.getItem('authToken');
+            
+            if (!token) {
+                document.getElementById('result').innerHTML = '<div class="result error">No token found. Please login first.</div>';
+                return;
+            }
+            
+            document.getElementById('result').innerHTML = '<div class="result info">Testing API access with token...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/farmers', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    document.getElementById('result').innerHTML = `
+                        <div class="result success">
+                            <h3>API Access Successful!</h3>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Farmers Count:</strong> ${data.count || 0}</p>
+                            <p><strong>Response:</strong> ${JSON.stringify(data, null, 2)}</p>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('result').innerHTML = `
+                        <div class="result error">
+                            <h3>API Access Failed</h3>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Error:</strong> ${data.error || 'Unknown error'}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <div class="result error">
+                        <h3>API Test Error</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Set manual token
+        function setManualToken() {
+            const token = document.getElementById('manualToken').value.trim();
+            
+            if (token) {
+                localStorage.setItem('authToken', token);
+                
+                // Set token in advanced API service
+                if (window.advancedApiService) {
+                    window.advancedApiService.token = token;
+                }
+                
+                document.getElementById('tokenResult').innerHTML = `
+                    <div class="result success">
+                        <h3>Token Set Manually</h3>
+                        <p><strong>Token:</strong> ${token}</p>
+                        <p>Token stored in localStorage and advanced API service</p>
+                    </div>
+                `;
+                
+                document.getElementById('manualToken').value = '';
+            } else {
+                document.getElementById('tokenResult').innerHTML = `
+                    <div class="result error">
+                        <h3>No Token Provided</h3>
+                        <p>Please enter a token</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
