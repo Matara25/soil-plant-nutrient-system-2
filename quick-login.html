@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Caiss Quick Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; margin-bottom: 30px; }
+        .login-form { display: flex; flex-direction: column; gap: 15px; }
+        input { padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
+        button { padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin: 15px 0; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .quick-login { display: flex; gap: 10px; margin-bottom: 20px; }
+        .quick-btn { flex: 1; padding: 8px; background: #28a745; font-size: 12px; }
+        .quick-btn:hover { background: #218838; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌾 Caiss Login</h1>
+        
+        <div class="quick-login">
+            <button class="quick-btn" onclick="quickLogin('farmer', 'farmer123')">Farmer</button>
+            <button class="quick-btn" onclick="quickLogin('farmer', 'farmer123')">Demo</button>
+            <button class="quick-btn" onclick="quickLogin('farmer', 'farmer123')">Admin</button>
+        </div>
+        
+        <form class="login-form" onsubmit="handleLogin(event)">
+            <input type="text" id="username" placeholder="Username" value="demo" required>
+            <input type="password" id="password" placeholder="Password" value="demo123" required>
+            <button type="submit">Login</button>
+        </form>
+        
+        <div id="result"></div>
+        
+        <div class="info">
+            <strong>Quick Login Options:</strong><br>
+            • Farmer: farmer / farmer123<br>
+            • Demo: farmer / farmer123<br>
+            • Admin: farmer / farmer123
+        </div>
+    </div>
+
+    <script>
+        async function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            await performLogin(username, password);
+        }
+        
+        async function quickLogin(username, password) {
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = password;
+            await performLogin(username, password);
+        }
+        
+        async function performLogin(username, password) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="result info">Logging in...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.token) {
+                    // Store token in localStorage
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <h3>✅ Login Successful!</h3>
+                            <p><strong>User:</strong> ${data.user.full_name}</p>
+                            <p><strong>Username:</strong> ${data.user.username}</p>
+                            <p><strong>Email:</strong> ${data.user.email}</p>
+                            <p><strong>Token:</strong> ${data.token.substring(0, 20)}...</p>
+                            <p><a href="http://localhost:8000" target="_blank">🚀 Go to Caiss Application</a></p>
+                        </div>
+                    `;
+                    
+                    // Set token for advanced API service
+                    if (window.opener && window.opener.advancedApiService) {
+                        window.opener.advancedApiService.token = data.token;
+                    }
+                    
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'http://localhost:8000';
+                    }, 2000);
+                    
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            <h3>❌ Login Failed!</h3>
+                            <p><strong>Status:</strong> ${response.status}</p>
+                            <p><strong>Error:</strong> ${data.error || 'Unknown error'}</p>
+                            <p>Try the quick login buttons above.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Connection Error!</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p>Make sure backend server is running on http://localhost:5000</p>
+                        <p>Run: python app_advanced.py</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Check if already logged in
+        window.onload = function() {
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('currentUser');
+            
+            if (token && user) {
+                document.getElementById('result').innerHTML = `
+                    <div class="result success">
+                        <h3>✅ Already Logged In!</h3>
+                        <p><strong>User:</strong> ${JSON.parse(user).full_name}</p>
+                        <p><a href="http://localhost:8000" target="_blank">🚀 Go to Caiss Application</a></p>
+                    </div>
+                `;
+            }
+        };
+    </script>
+</body>
+</html>

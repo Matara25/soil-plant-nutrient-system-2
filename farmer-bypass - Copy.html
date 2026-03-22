@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Farmer Creation Bypass</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .container { max-width: 500px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        h1 { color: #333; text-align: center; margin-bottom: 30px; }
+        .bypass-btn { 
+            display: block; 
+            width: 100%; 
+            padding: 15px; 
+            background: #28a745; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 18px; 
+            cursor: pointer; 
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+        .bypass-btn:hover { background: #218838; transform: translateY(-2px); }
+        .success { 
+            background: #d4edda; 
+            color: #155724; 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin: 20px 0;
+            border: 1px solid #c3e6cb;
+        }
+        .info { 
+            background: #d1ecf1; 
+            color: #0c5460; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 15px 0;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌾 Farmer Creation Bypass</h1>
+        
+        <div class="info">
+            <strong>⚡ Add Farmer Directly to Local Storage</strong><br>
+            This bypasses all API issues and adds farmers directly to the system.
+        </div>
+        
+        <button class="bypass-btn" onclick="addLocalFarmer()">
+            🚀 Add Sample Farmer to System
+        </button>
+        
+        <button class="bypass-btn" onclick="addMultipleFarmers()" style="background: #007bff;">
+            📊 Add Multiple Sample Farmers
+        </button>
+        
+        <button class="bypass-btn" onclick="clearFarmers()" style="background: #dc3545;">
+            🗑️ Clear All Farmers
+        </button>
+        
+        <button class="bypass-btn" onclick="goToMainApp()" style="background: #ffc107;">
+            🏠 Go to Main Application
+        </button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function addLocalFarmer() {
+            const resultDiv = document.getElementById('result');
+            
+            // Create sample farmer
+            const farmer = {
+                id: Date.now(),
+                name: 'John Doe',
+                email: 'john@caiss.com',
+                phone_number: '+254712345678',
+                location: 'Nairobi, Kenya',
+                farm_size: 2.5,
+                experience_years: 5,
+                created_at: new Date().toISOString()
+            };
+            
+            // Get existing farmers or create empty array
+            let farmers = JSON.parse(localStorage.getItem('farmers') || '[]');
+            
+            // Add new farmer
+            farmers.push(farmer);
+            
+            // Save to localStorage
+            localStorage.setItem('farmers', JSON.stringify(farmers));
+            
+            resultDiv.innerHTML = `
+                <div class="success">
+                    <h3>✅ Farmer Added Successfully!</h3>
+                    <p><strong>Name:</strong> ${farmer.name}</p>
+                    <p><strong>Email:</strong> ${farmer.email}</p>
+                    <p><strong>Location:</strong> ${farmer.location}</p>
+                    <p><strong>Farm Size:</strong> ${farmer.farm_size} ha</p>
+                    <p><strong>Experience:</strong> ${farmer.experience_years} years</p>
+                    <p><strong>Total Farmers:</strong> ${farmers.length}</p>
+                </div>
+            `;
+        }
+        
+        function addMultipleFarmers() {
+            const resultDiv = document.getElementById('result');
+            
+            // Create multiple sample farmers
+            const sampleFarmers = [
+                {
+                    id: Date.now() + 1,
+                    name: 'John Doe',
+                    email: 'john@caiss.com',
+                    phone_number: '+254712345678',
+                    location: 'Nairobi, Kenya',
+                    farm_size: 2.5,
+                    experience_years: 5,
+                    created_at: new Date().toISOString()
+                },
+                {
+                    id: Date.now() + 2,
+                    name: 'Mary Smith',
+                    email: 'mary@caiss.com',
+                    phone_number: '+254723456789',
+                    location: 'Mombasa, Kenya',
+                    farm_size: 1.8,
+                    experience_years: 8,
+                    created_at: new Date().toISOString()
+                },
+                {
+                    id: Date.now() + 3,
+                    name: 'David Kimani',
+                    email: 'david@caiss.com',
+                    phone_number: '+254734567890',
+                    location: 'Kisumu, Kenya',
+                    farm_size: 3.2,
+                    experience_years: 12,
+                    created_at: new Date().toISOString()
+                }
+            ];
+            
+            // Get existing farmers
+            let farmers = JSON.parse(localStorage.getItem('farmers') || '[]');
+            
+            // Add new farmers
+            farmers.push(...sampleFarmers);
+            
+            // Save to localStorage
+            localStorage.setItem('farmers', JSON.stringify(farmers));
+            
+            resultDiv.innerHTML = `
+                <div class="success">
+                    <h3>✅ Multiple Farmers Added!</h3>
+                    <p><strong>Added:</strong> ${sampleFarmers.length} farmers</p>
+                    <p><strong>Total Farmers:</strong> ${farmers.length}</p>
+                    <p><strong>Names:</strong> ${sampleFarmers.map(f => f.name).join(', ')}</p>
+                </div>
+            `;
+        }
+        
+        function clearFarmers() {
+            localStorage.removeItem('farmers');
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="info">
+                    <h3>🗑️ Farmers Cleared!</h3>
+                    <p>All farmers have been removed from local storage.</p>
+                </div>
+            `;
+        }
+        
+        function goToMainApp() {
+            // Set a fake authentication token so the app works
+            const fakeToken = 'bypass_' + Date.now();
+            const fakeUser = {
+                id: 1,
+                username: 'demo',
+                email: 'demo@caiss.com',
+                full_name: 'Demo User'
+            };
+            
+            localStorage.setItem('authToken', fakeToken);
+            localStorage.setItem('currentUser', JSON.stringify(fakeUser));
+            
+            // Redirect to main app
+            window.location.href = 'http://localhost:8000';
+        }
+        
+        // Show current farmers on load
+        window.onload = function() {
+            const farmers = JSON.parse(localStorage.getItem('farmers') || '[]');
+            
+            if (farmers.length > 0) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `
+                    <div class="info">
+                        <h3>📊 Current Farmers in Storage</h3>
+                        <p><strong>Total:</strong> ${farmers.length} farmers</p>
+                        <ul>
+                            ${farmers.map(f => `<li><strong>${f.name}</strong> - ${f.location}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+        };
+    </script>
+</body>
+</html>

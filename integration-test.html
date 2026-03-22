@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoilDoctor Integration Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>SoilDoctor Integration Test</h1>
+    <p>This page tests the integration between the frontend and backend systems.</p>
+
+    <div class="test-container">
+        <h2>Backend Connection Test</h2>
+        <button onclick="testBackendConnection()">Test Backend Connection</button>
+        <div id="connectionResult"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Authentication Test</h2>
+        <button onclick="testAuthentication()">Test Login</button>
+        <button onclick="testLogout()">Test Logout</button>
+        <div id="authResult"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Farmer Management Test</h2>
+        <button onclick="testCreateFarmer()">Create Test Farmer</button>
+        <button onclick="testGetFarmers()">Get All Farmers</button>
+        <button onclick="testUpdateFarmer()">Update Test Farmer</button>
+        <button onclick="testDeleteFarmer()">Delete Test Farmer</button>
+        <div id="farmerResult"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>API Service Test</h2>
+        <button onclick="testApiService()">Test API Service</button>
+        <div id="apiResult"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Database Integration Test</h2>
+        <button onclick="testDatabaseIntegration()">Test Database</button>
+        <div id="databaseResult"></div>
+    </div>
+
+    <script src="api-service.js"></script>
+    <script src="database-integrated.js"></script>
+    <script>
+        let testToken = null;
+        let testFarmerId = null;
+
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="test-result ${type}">${message}</div>`;
+        }
+
+        function showDetailedResult(elementId, title, data, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `
+                <div class="test-result ${type}">
+                    <h3>${title}</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            `;
+        }
+
+        async function testBackendConnection() {
+            try {
+                const response = await fetch('http://localhost:5000/');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showDetailedResult('connectionResult', '✅ Backend Connected Successfully', data, 'success');
+                } else {
+                    showResult('connectionResult', '❌ Backend connection failed', 'error');
+                }
+            } catch (error) {
+                showResult('connectionResult', `❌ Backend connection error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAuthentication() {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'farmer',
+                        password: 'soil123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    testToken = data.token;
+                    showDetailedResult('authResult', '✅ Authentication Successful', data, 'success');
+                } else {
+                    showDetailedResult('authResult', '❌ Authentication Failed', data, 'error');
+                }
+            } catch (error) {
+                showResult('authResult', `❌ Authentication error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLogout() {
+            if (!testToken) {
+                showResult('authResult', '⚠️ Please login first', 'info');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${testToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    testToken = null;
+                    showDetailedResult('authResult', '✅ Logout Successful', data, 'success');
+                } else {
+                    showDetailedResult('authResult', '❌ Logout Failed', data, 'error');
+                }
+            } catch (error) {
+                showResult('authResult', `❌ Logout error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCreateFarmer() {
+            if (!testToken) {
+                showResult('farmerResult', '⚠️ Please login first', 'info');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/farmers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${testToken}`
+                    },
+                    body: JSON.stringify({
+                        name: 'Test Farmer',
+                        email: 'test@example.com',
+                        phone: '123-456-7890',
+                        location: 'Test Location',
+                        farm_size: 2.5,
+                        experience_years: 5
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    testFarmerId = data.id;
+                    showDetailedResult('farmerResult', '✅ Farmer Created Successfully', data, 'success');
+                } else {
+                    showDetailedResult('farmerResult', '❌ Farmer Creation Failed', data, 'error');
+                }
+            } catch (error) {
+                showResult('farmerResult', `❌ Farmer creation error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testGetFarmers() {
+            if (!testToken) {
+                showResult('farmerResult', '⚠️ Please login first', 'info');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/farmers', {
+                    headers: {
+                        'Authorization': `Bearer ${testToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showDetailedResult('farmerResult', '✅ Farmers Retrieved Successfully', data, 'success');
+                } else {
+                    showDetailedResult('farmerResult', '❌ Failed to Get Farmers', data, 'error');
+                }
+            } catch (error) {
+                showResult('farmerResult', `❌ Get farmers error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testUpdateFarmer() {
+            if (!testToken || !testFarmerId) {
+                showResult('farmerResult', '⚠️ Please login and create a farmer first', 'info');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/farmers/${testFarmerId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${testToken}`
+                    },
+                    body: JSON.stringify({
+                        name: 'Updated Test Farmer',
+                        email: 'updated@example.com'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showDetailedResult('farmerResult', '✅ Farmer Updated Successfully', data, 'success');
+                } else {
+                    showDetailedResult('farmerResult', '❌ Farmer Update Failed', data, 'error');
+                }
+            } catch (error) {
+                showResult('farmerResult', `❌ Farmer update error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testDeleteFarmer() {
+            if (!testToken || !testFarmerId) {
+                showResult('farmerResult', '⚠️ Please login and create a farmer first', 'info');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/farmers/${testFarmerId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${testToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    testFarmerId = null;
+                    showDetailedResult('farmerResult', '✅ Farmer Deleted Successfully', data, 'success');
+                } else {
+                    showDetailedResult('farmerResult', '❌ Farmer Deletion Failed', data, 'error');
+                }
+            } catch (error) {
+                showResult('farmerResult', `❌ Farmer deletion error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testApiService() {
+            try {
+                // Test API service initialization
+                if (window.apiService) {
+                    showResult('apiResult', '✅ API Service loaded successfully', 'success');
+                    
+                    // Test login through API service
+                    try {
+                        const result = await window.apiService.login('farmer', 'soil123');
+                        showDetailedResult('apiResult', '✅ API Service Login Test', result, 'success');
+                    } catch (error) {
+                        showResult('apiResult', `❌ API Service login failed: ${error.message}`, 'error');
+                    }
+                } else {
+                    showResult('apiResult', '❌ API Service not loaded', 'error');
+                }
+            } catch (error) {
+                showResult('apiResult', `❌ API Service test error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testDatabaseIntegration() {
+            try {
+                // Test database initialization
+                if (window.farmDB) {
+                    showResult('databaseResult', '✅ Database Service loaded successfully', 'success');
+                    
+                    // Test getting statistics
+                    const stats = window.farmDB.getStatistics();
+                    showDetailedResult('databaseResult', '✅ Database Statistics', stats, 'success');
+                    
+                    // Test getting all farmers
+                    const farmers = window.farmDB.getAllFarmers();
+                    showDetailedResult('databaseResult', '✅ Current Farmers in Database', farmers, 'success');
+                } else {
+                    showResult('databaseResult', '❌ Database Service not loaded', 'error');
+                }
+            } catch (error) {
+                showResult('databaseResult', `❌ Database test error: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-run backend connection test on page load
+        window.addEventListener('load', () => {
+            setTimeout(testBackendConnection, 1000);
+        });
+    </script>
+</body>
+</html>
